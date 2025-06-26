@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:roboarm_controller_app/components/instructions_box.dart';
+import 'package:roboarm_controller_app/components/my_joystick.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +14,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text('Home Page')),
+      body: Center(child: MyJoystick()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(

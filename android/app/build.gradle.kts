@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.roboarm_controller_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = 29.0.13113456
+    ndkVersion = "29.0.13113456"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

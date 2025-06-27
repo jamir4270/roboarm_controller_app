@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:roboarm_controller_app/components/instructions_box.dart';
 import 'package:roboarm_controller_app/pages/home_page.dart';
 
 void main() {
@@ -46,6 +45,22 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+  final Color primaryColor = const Color(
+    0xFF2C3E50,
+  ); // Dark Blue/Charcoal for primary elements
+  final Color accentColor = const Color(
+    0xFF3498DB,
+  ); // A calming Blue for accents
+  final Color backgroundColor = const Color(
+    0xFFECF0F1,
+  ); // Light Grey for the background
+  final Color textColor = const Color(0xFF34495E); // Darker Grey for text
+  final Color successColor = const Color(
+    0xFF2ECC71,
+  ); // Green for success states (e.g., connected)
+  final Color warningColor = const Color(
+    0xFFE67E22,
+  ); // Orange for warning states (e.g., not connected)
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect

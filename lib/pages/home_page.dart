@@ -112,6 +112,11 @@ class _HomePageState extends State<HomePage> {
                               if (mounted) {
                                 setState(() => _connectingToIndex = null);
                               }
+                              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                                const SnackBar(
+                                  content: Text("Connected to device"),
+                                ),
+                              );
                             }
                           } catch (e) {
                             if (mounted) {
@@ -124,6 +129,37 @@ class _HomePageState extends State<HomePage> {
                                 content: Text("Error connecting to device"),
                               ),
                             );
+                          }
+                          if (connection != null && connection.isConnected) {
+                            // ... update UI, set _connectingToIndex = null, deviceStatus = true
+                            print(
+                              "Successfully connected to ${result.name} at ${result.address}",
+                            );
+
+                            try {
+                              // Send a test message
+                              String testCommand = "Hello from Flutter App!\n";
+                              connection.output?.add(
+                                Uint8List.fromList(testCommand.codeUnits),
+                              );
+                              // IMPORTANT: If you expect to send more data later,
+                              // DO NOT close the output stream immediately.
+                              // If this is just a one-off test, you might close it or add a delay.
+                              // For continuous control, keep it open.
+                              // await connection.output?.close(); // Comment this out for continuous communication
+                              print("Sent: '$testCommand'");
+                            } catch (e) {
+                              print("Error during data exchange: $e");
+                              ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Error during data exchange: ${e.toString()}",
+                                  ),
+                                ),
+                              );
+                              connection?.dispose();
+                              if (mounted) setState(() => deviceStatus = false);
+                            }
                           }
                         },
                       ),

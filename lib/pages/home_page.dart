@@ -29,9 +29,6 @@ class _HomePageState extends State<HomePage> {
 
   BluetoothConnection? _currentConnection;
 
-  final leftController = JoystickController();
-  final rightController = JoystickController();
-
   int x_servo = 90;
   int y_servo = 90;
   int z_servo = 90;
@@ -266,10 +263,7 @@ class _HomePageState extends State<HomePage> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  MyJoystick(
-                    myController: leftController,
-                    myListener: leftJoystickMovement,
-                  ),
+                  MyJoystick(myListener: leftJoystickMovement),
                   const SizedBox(height: 30),
                   const Text("XY-AXIS"),
                 ],
@@ -278,10 +272,7 @@ class _HomePageState extends State<HomePage> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  MyJoystick(
-                    myController: rightController,
-                    myListener: rightJoystickMovement,
-                  ),
+                  MyJoystick(myListener: rightJoystickMovement),
                   const SizedBox(height: 20),
                   const Text("Z-AXIS & CLAMP"),
                 ],

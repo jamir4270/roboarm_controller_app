@@ -94,25 +94,45 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
+            // Apply color to AlertDialog background
+            backgroundColor: Color(0xFFECF0F1), // Light Grey
             title: const Text(
               "Available Devices",
-            ), // Added const for efficiency
+              style: TextStyle(color: Color(0xFF2C3E50)), // Dark Grey for title
+            ),
             content: SizedBox(
               width: 300.0,
               child: ListView(
                 children: [
-                  const SizedBox(), // Added const
+                  const SizedBox(),
                   if (scanResults.isEmpty)
-                    const Center(child: Text("No devices found yet"))
+                    const Center(
+                      child: Text(
+                        "No devices found yet",
+                        style: TextStyle(color: Color(0xFF2C3E50)),
+                      ),
+                    )
                   else
                     for (var (index, result) in scanResults.indexed)
                       ListTile(
                         title: Text(
                           "${result.name ?? "???"} (${result.address})",
+                          style: TextStyle(
+                            color: Color(0xFF2C3E50),
+                          ), // Dark Grey
                         ),
                         trailing: index == _connectingToIndex
-                            ? const CircularProgressIndicator()
-                            : Text("${result.rssi} dBm"),
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color(0xFFFFD700),
+                                ), // Yellow spinner
+                              )
+                            : Text(
+                                "${result.rssi} dBm",
+                                style: TextStyle(
+                                  color: Color(0xFF8C92AC),
+                                ), // Muted Grey/Blue for RSSI
+                              ),
                         onTap: () async {
                           setState(() => _connectingToIndex = index);
                           _currentConnection?.dispose();
@@ -137,6 +157,9 @@ class _HomePageState extends State<HomePage> {
                               ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                                 const SnackBar(
                                   content: Text("Connected to device"),
+                                  backgroundColor: Color(
+                                    0xFF1ABC9C,
+                                  ), // Teal for success
                                 ),
                               );
                             }
@@ -151,6 +174,8 @@ class _HomePageState extends State<HomePage> {
                             ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                               const SnackBar(
                                 content: Text("Error connecting to device"),
+                                backgroundColor:
+                                    Colors.red, // Standard error color
                               ),
                             );
                             if (mounted) setState(() => deviceStatus = false);
@@ -171,6 +196,12 @@ class _HomePageState extends State<HomePage> {
                     _blueClassicPlugin.stopScan();
                     Navigator.of(context).pop();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(
+                      0xFF8C92AC,
+                    ), // Muted Grey/Blue for button
+                    foregroundColor: Color(0xFFECF0F1), // Light Grey text
+                  ),
                   child: const Text("Stop Scan"),
                 ),
               ),
@@ -196,22 +227,21 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (details.y < 0) {
-            // Moving up (typically negative y for up)
             y_servo = (y_servo - 3).clamp(0, 180);
             _currentConnection!.writeString("S2-${y_servo}\n");
             print("S2${y_servo}");
           } else if (details.y > 0) {
-            // Moving down (typically positive y for down)
             y_servo = (y_servo + 3).clamp(0, 180);
             _currentConnection!.writeString("S2-${y_servo}\n");
             print("S2${y_servo}");
           }
         } else {
           ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text(
                 "No active Bluetooth connection to send joystick data.",
               ),
+              backgroundColor: Colors.red, // Standard error color
             ),
           );
           print("No active Bluetooth connection to send joystick data.");
@@ -223,12 +253,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         if (_currentConnection != null && _currentConnection!.isConnected) {
           if (details.y < 0) {
-            // Moving left
             z_servo = (z_servo + 3).clamp(0, 180);
             _currentConnection!.writeString("S4-${z_servo}\n");
             print("S4${z_servo}");
           } else if (details.y > 0) {
-            // Moving right
             z_servo = (z_servo - 3).clamp(0, 180);
             _currentConnection!.writeString("S4-${z_servo}\n");
             print("S1${z_servo}");
@@ -246,10 +274,11 @@ class _HomePageState extends State<HomePage> {
           }
         } else {
           ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text(
                 "No active Bluetooth connection to send joystick data.",
               ),
+              backgroundColor: Colors.red, // Standard error color
             ),
           );
           print("No active Bluetooth connection to send joystick data.");
@@ -257,56 +286,58 @@ class _HomePageState extends State<HomePage> {
       });
     }
 
-    /*void rightJoystickMovement(StickDragDetails details) {
-      setState(() {
-        if (details.x < 0) {
-          // Moving left (controls Z for right joystick)
-          z_servo = (z_servo - 3).clamp(0, 180);
-        } else if (details.x > 0) {
-          // Moving right (controls Z for right joystick)
-          z_servo = (z_servo + 3).clamp(0, 180);
-        }
-
-        if (details.y < 0) {
-          // Moving up (controls Clamp for right joystick)
-          clamp_servo = (clamp_servo - 3).clamp(0, 180);
-        } else if (details.y > 0) {
-          // Moving down (controls Clamp for right joystick)
-          clamp_servo = (clamp_servo + 3).clamp(0, 180);
-        }
-
-        // Only send if there's an active connection
-        if (_currentConnection != null && _currentConnection!.isConnected) {
-          _currentConnection!.writeString("S4-${z_servo}\n");
-          print("S4${z_servo}");
-          _currentConnection!.writeString("S3-${clamp_servo}\n");
-          print("S3${clamp_servo}");
-        } else {
-          print("No active Bluetooth connection to send joystick data.");
-        }
-      });
-    }*/
-
     return Scaffold(
-      appBar: AppBar(title: const Text("RoboArm Controller")),
+      // Overall background of the app
+      backgroundColor: Color(0xFFECF0F1), // Light Grey
+      appBar: AppBar(
+        title: const Text(
+          "RoboArm Controller",
+          style: TextStyle(color: Color(0xFFECF0F1)), // Light Grey text
+        ),
+        backgroundColor: Color(0xFF2C3E50), // Dark Grey/Almost Black for AppBar
+        iconTheme: const IconThemeData(
+          color: Color(0xFFECF0F1),
+        ), // Light Grey for icons
+      ),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Adapter State: " + _adapterState.name),
-              const SizedBox(width: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _blueClassicPlugin.turnOn();
-                  _blueClassicPlugin.startScan();
-                  displayDevices();
-                },
-                child: const Text("Available Devices"),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Adapter State: " + _adapterState.name,
+                  style: TextStyle(
+                    color: Color(0xFF2C3E50),
+                  ), // Dark Grey for text
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _blueClassicPlugin.turnOn();
+                    _blueClassicPlugin.startScan();
+                    displayDevices();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFFFD700), // Yellow for button
+                    foregroundColor: Color(
+                      0xFF2C3E50,
+                    ), // Dark Grey text on yellow
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text("Available Devices"),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -314,8 +345,13 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   MyJoystick(myListener: leftJoystickMovement),
-                  const SizedBox(height: 30),
-                  const Text("XY-AXIS"),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "XY-AXIS",
+                    style: TextStyle(
+                      color: Color(0xFF2C3E50),
+                    ), // Dark Grey for text
+                  ),
                 ],
               ),
               const SizedBox(width: 30),
@@ -324,7 +360,12 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   MyJoystick(myListener: rightJoystickMovement),
                   const SizedBox(height: 20),
-                  const Text("Z-AXIS & CLAMP"),
+                  const Text(
+                    "Z-AXIS & CLAMP",
+                    style: TextStyle(
+                      color: Color(0xFF2C3E50),
+                    ), // Dark Grey for text
+                  ),
                 ],
               ),
             ],
@@ -336,11 +377,13 @@ class _HomePageState extends State<HomePage> {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return const InstructionsBox(); // Added const
+              return const InstructionsBox();
             },
           );
         },
-        child: const Icon(Icons.info_rounded), // Added const
+        backgroundColor: Color(0xFF1ABC9C), // Teal for FAB
+        foregroundColor: Color(0xFFECF0F1), // Light Grey for icon
+        child: const Icon(Icons.info_rounded),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

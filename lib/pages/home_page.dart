@@ -27,8 +27,6 @@ class _HomePageState extends State<HomePage> {
   int? _connectingToIndex;
   StreamSubscription? _scanningStateSubscription;
 
-  // IMPORTANT: Declare your BluetoothConnection as a state variable
-  // It should be nullable because it's null before connection and after disconnection.
   BluetoothConnection? _currentConnection;
 
   final leftController = JoystickController();
@@ -60,8 +58,9 @@ class _HomePageState extends State<HomePage> {
       _scanningStateSubscription = _blueClassicPlugin.isScanning.listen((
         isScanning,
       ) {
-        if (mounted)
-          setState(() => _isScanning = isScanning); // Corrected this line
+        if (mounted) {
+          setState(() => _isScanning = isScanning);
+        }
       });
     } catch (e) {
       if (kDebugMode) print(e);
@@ -79,17 +78,13 @@ class _HomePageState extends State<HomePage> {
     _adapterStateSubscription?.cancel();
     _scanSubscription?.cancel();
     _scanningStateSubscription?.cancel();
-    _currentConnection
-        ?.dispose(); // Dispose the connection when the widget is disposed
+    _currentConnection?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     List<BluetoothDevice> scanResults = _scanResults.toList();
-
-    // Remove this line. The connection will be stored in _currentConnection.
-    // BluetoothConnection? connection; // <-- REMOVE THIS LINE
 
     for (int i = 0; i < scanResults.length; i++) {
       print(scanResults[i].name);
@@ -121,17 +116,16 @@ class _HomePageState extends State<HomePage> {
                             : Text("${result.rssi} dBm"),
                         onTap: () async {
                           setState(() => _connectingToIndex = index);
-                          // Ensure previous connection is disposed before trying new one
                           _currentConnection?.dispose();
-                          _currentConnection =
-                              null; // Clear previous connection
+                          _currentConnection = null;
 
                           try {
                             _currentConnection = await _blueClassicPlugin
                                 .connect(result.address);
 
-                            if (!mounted)
-                              return; // Check mounted after async operation
+                            if (!mounted) {
+                              return;
+                            }
 
                             if (_currentConnection != null &&
                                 _currentConnection!.isConnected) {
@@ -146,61 +140,6 @@ class _HomePageState extends State<HomePage> {
                                   content: Text("Connected to device"),
                                 ),
                               );
-                              print(
-                                "Successfully connected to ${result.name} at ${result.address}",
-                              );
-
-                              // You might want to set up an input stream listener here
-                              // to receive data from the Bluetooth device.
-                              _currentConnection!.input
-                                  ?.listen((Uint8List data) {
-                                    // Handle incoming data from the device
-                                    print(
-                                      'Received from device: ${String.fromCharCodes(data)}',
-                                    );
-                                  })
-                                  .onDone(() {
-                                    // Handle disconnection from the device's side
-                                    if (mounted) {
-                                      setState(() {
-                                        _currentConnection = null;
-                                        deviceStatus = false;
-                                      });
-                                      ScaffoldMessenger.maybeOf(
-                                        context,
-                                      )?.showSnackBar(
-                                        const SnackBar(
-                                          content: Text("Device disconnected."),
-                                        ),
-                                      );
-                                    }
-                                  });
-
-                              try {
-                                // Send a test message
-                                String testCommand =
-                                    "Hello from Flutter App!\n";
-                                // Use _currentConnection! for non-nullable access after null check
-                                _currentConnection!.output?.add(
-                                  Uint8List.fromList(testCommand.codeUnits),
-                                );
-                                print("Sent: '$testCommand'");
-                              } catch (e) {
-                                print("Error during initial data exchange: $e");
-                                ScaffoldMessenger.maybeOf(
-                                  context,
-                                )?.showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "Error during initial data exchange: ${e.toString()}",
-                                    ),
-                                  ),
-                                );
-                                _currentConnection
-                                    ?.dispose(); // Dispose on error
-                                if (mounted)
-                                  setState(() => deviceStatus = false);
-                              }
                             }
                           } catch (e) {
                             if (mounted) {
@@ -217,8 +156,9 @@ class _HomePageState extends State<HomePage> {
                             );
                             if (mounted) setState(() => deviceStatus = false);
                           } finally {
-                            if (mounted)
+                            if (mounted) {
                               setState(() => _connectingToIndex = null);
+                            }
                           }
                         },
                       ),
@@ -230,9 +170,9 @@ class _HomePageState extends State<HomePage> {
                 child: ElevatedButton(
                   onPressed: () {
                     _blueClassicPlugin.stopScan();
-                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.of(context).pop();
                   },
-                  child: const Text("Stop Scan"), // Added const
+                  child: const Text("Stop Scan"),
                 ),
               ),
             ],
@@ -242,11 +182,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     void leftJoystickMovement(StickDragDetails details) {
-      // Use the class-level _currentConnection variable
       setState(() {
-        // Corrected logic for servo limits (you had x_servo += 3 if x_servo >= 0, etc.)
-        // This makes sure it decrements when details.x is negative and increments when positive.
-        // Also, ensures it stays within 0-180 range.
         if (details.x < 0) {
           // Moving left
           x_servo = (x_servo - 3).clamp(0, 180);
@@ -263,20 +199,11 @@ class _HomePageState extends State<HomePage> {
           y_servo = (y_servo + 3).clamp(0, 180);
         }
 
-        // Only send if there's an active connection
         if (_currentConnection != null && _currentConnection!.isConnected) {
-          // You should send both x and y values together if they are part of the same control
-          // Or, send them individually based on which one changed
-          // For simplicity, let's send both x and y every time the joystick moves
           _currentConnection!.writeString("S1-${x_servo}\n");
           print("S1${x_servo}");
           _currentConnection!.writeString("S2-${y_servo}\n");
           print("S2${y_servo}");
-
-          // If you only want to send when the value actually changes:
-          // if (previous_x_servo != x_servo) { _currentConnection!.writeString("S1${x_servo}\n"); }
-          // if (previous_y_servo != y_servo) { _currentConnection!.writeString("S2${y_servo}\n"); }
-          // You'd need to store previous_x_servo and previous_y_servo as state variables too.
         } else {
           print("No active Bluetooth connection to send joystick data.");
         }
@@ -284,9 +211,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     void rightJoystickMovement(StickDragDetails details) {
-      // Use the class-level _currentConnection variable
       setState(() {
-        // Corrected logic for servo limits
         if (details.x < 0) {
           // Moving left (controls Z for right joystick)
           z_servo = (z_servo - 3).clamp(0, 180);

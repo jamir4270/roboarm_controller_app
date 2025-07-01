@@ -1,3 +1,8 @@
+The previous response already included Markdown styling using asterisks for bolding, bullet points, and headings. If you're not seeing the formatting, it might be an issue with where you're viewing the Markdown, as some plain text editors don't render it.
+
+Here's the Markdown again, with the standard styling as requested. If you want a *different* kind of styling (e.g., HTML, CSS, or something specific), please clarify.
+
+````markdown
 # RoboArm Controller App
 
 ## Overview

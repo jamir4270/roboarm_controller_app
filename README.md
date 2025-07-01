@@ -147,6 +147,3 @@ If you encounter any issues or have questions, please open an issue on this GitH
   * **Developer:** jamir4270
 
 **Disclaimer:** This application is provided as-is. Ensure proper safety measures when operating robotic arms. The developers are not responsible for any damage or injury caused by the use of this application or the robotic arm.
-
-```
-```

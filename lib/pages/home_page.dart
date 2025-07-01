@@ -182,34 +182,82 @@ class _HomePageState extends State<HomePage> {
 
     void leftJoystickMovement(StickDragDetails details) {
       setState(() {
-        if (details.x < 0) {
-          // Moving left
-          x_servo = (x_servo - 3).clamp(0, 180);
-        } else if (details.x > 0) {
-          // Moving right
-          x_servo = (x_servo + 3).clamp(0, 180);
-        }
-
-        if (details.y < 0) {
-          // Moving up (typically negative y for up)
-          y_servo = (y_servo - 3).clamp(0, 180);
-        } else if (details.y > 0) {
-          // Moving down (typically positive y for down)
-          y_servo = (y_servo + 3).clamp(0, 180);
-        }
-
         if (_currentConnection != null && _currentConnection!.isConnected) {
-          _currentConnection!.writeString("S1-${x_servo}\n");
-          print("S1${x_servo}");
-          _currentConnection!.writeString("S2-${y_servo}\n");
-          print("S2${y_servo}");
+          if (details.x < 0) {
+            // Moving left
+            x_servo = (x_servo - 3).clamp(0, 180);
+            _currentConnection!.writeString("S1-${x_servo}\n");
+            print("S1${x_servo}");
+          } else if (details.x > 0) {
+            // Moving right
+            x_servo = (x_servo + 3).clamp(0, 180);
+            _currentConnection!.writeString("S1-${x_servo}\n");
+            print("S1${x_servo}");
+          }
+
+          if (details.y < 0) {
+            // Moving up (typically negative y for up)
+            y_servo = (y_servo - 3).clamp(0, 180);
+            _currentConnection!.writeString("S2-${y_servo}\n");
+            print("S2${y_servo}");
+          } else if (details.y > 0) {
+            // Moving down (typically positive y for down)
+            y_servo = (y_servo + 3).clamp(0, 180);
+            _currentConnection!.writeString("S2-${y_servo}\n");
+            print("S2${y_servo}");
+          }
         } else {
+          ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+            SnackBar(
+              content: Text(
+                "No active Bluetooth connection to send joystick data.",
+              ),
+            ),
+          );
           print("No active Bluetooth connection to send joystick data.");
         }
       });
     }
 
     void rightJoystickMovement(StickDragDetails details) {
+      setState(() {
+        if (_currentConnection != null && _currentConnection!.isConnected) {
+          if (details.y < 0) {
+            // Moving left
+            z_servo = (z_servo + 3).clamp(0, 180);
+            _currentConnection!.writeString("S4-${z_servo}\n");
+            print("S4${z_servo}");
+          } else if (details.y > 0) {
+            // Moving right
+            z_servo = (z_servo - 3).clamp(0, 180);
+            _currentConnection!.writeString("S4-${z_servo}\n");
+            print("S1${z_servo}");
+          }
+
+          if (details.x < 0) {
+            clamp_servo = (clamp_servo - 3).clamp(0, 180);
+            _currentConnection!.writeString("S3-${clamp_servo}\n");
+            print("S3${clamp_servo}");
+          } else if (details.x > 0) {
+            // Moving down (typically positive y for down)
+            clamp_servo = (clamp_servo + 3).clamp(0, 180);
+            _currentConnection!.writeString("S3-${clamp_servo}\n");
+            print("S3${clamp_servo}");
+          }
+        } else {
+          ScaffoldMessenger.maybeOf(context)?.showSnackBar(
+            SnackBar(
+              content: Text(
+                "No active Bluetooth connection to send joystick data.",
+              ),
+            ),
+          );
+          print("No active Bluetooth connection to send joystick data.");
+        }
+      });
+    }
+
+    /*void rightJoystickMovement(StickDragDetails details) {
       setState(() {
         if (details.x < 0) {
           // Moving left (controls Z for right joystick)
@@ -237,7 +285,7 @@ class _HomePageState extends State<HomePage> {
           print("No active Bluetooth connection to send joystick data.");
         }
       });
-    }
+    }*/
 
     return Scaffold(
       appBar: AppBar(title: const Text("RoboArm Controller")),

@@ -39,6 +39,7 @@ dependencies:
   flutter_blue_classic: ^0.0.6
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
+  rename_app: ^1.6.5
 
 dev_dependencies:
   flutter_test:

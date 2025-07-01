@@ -230,10 +230,10 @@ class _HomePageState extends State<HomePage> {
 
         // Only send if there's an active connection
         if (_currentConnection != null && _currentConnection!.isConnected) {
-          _currentConnection!.writeString("S3-${z_servo}\n");
-          print("S3${z_servo}");
-          _currentConnection!.writeString("S4-${clamp_servo}\n");
-          print("S4${clamp_servo}");
+          _currentConnection!.writeString("S4-${z_servo}\n");
+          print("S4${z_servo}");
+          _currentConnection!.writeString("S3-${clamp_servo}\n");
+          print("S3${clamp_servo}");
         } else {
           print("No active Bluetooth connection to send joystick data.");
         }
@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> {
                   _blueClassicPlugin.startScan();
                   displayDevices();
                 },
-                child: const Text("Scan RoboArm"),
+                child: const Text("Available Devices"),
               ),
             ],
           ),

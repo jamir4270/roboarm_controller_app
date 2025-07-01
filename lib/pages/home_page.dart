@@ -38,6 +38,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     initPlatformState();
+    _blueClassicPlugin.turnOn();
+    _blueClassicPlugin.startScan();
   }
 
   Future<void> initPlatformState() async {

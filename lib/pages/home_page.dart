@@ -94,11 +94,10 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            // Apply color to AlertDialog background
-            backgroundColor: Color(0xFFECF0F1), // Light Grey
+            backgroundColor: Color(0xFFECF0F1),
             title: const Text(
               "Available Devices",
-              style: TextStyle(color: Color(0xFF2C3E50)), // Dark Grey for title
+              style: TextStyle(color: Color(0xFF2C3E50)),
             ),
             content: SizedBox(
               width: 300.0,
@@ -117,21 +116,17 @@ class _HomePageState extends State<HomePage> {
                       ListTile(
                         title: Text(
                           "${result.name ?? "???"} (${result.address})",
-                          style: TextStyle(
-                            color: Color(0xFF2C3E50),
-                          ), // Dark Grey
+                          style: TextStyle(color: Color(0xFF2C3E50)),
                         ),
                         trailing: index == _connectingToIndex
                             ? CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   Color(0xFFFFD700),
-                                ), // Yellow spinner
+                                ),
                               )
                             : Text(
                                 "${result.rssi} dBm",
-                                style: TextStyle(
-                                  color: Color(0xFF8C92AC),
-                                ), // Muted Grey/Blue for RSSI
+                                style: TextStyle(color: Color(0xFF8C92AC)),
                               ),
                         onTap: () async {
                           setState(() => _connectingToIndex = index);
@@ -151,15 +146,13 @@ class _HomePageState extends State<HomePage> {
                               if (mounted) {
                                 setState(() {
                                   _connectingToIndex = null;
-                                  deviceStatus = true; // Update device status
+                                  deviceStatus = true;
                                 });
                               }
                               ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                                 const SnackBar(
                                   content: Text("Connected to device"),
-                                  backgroundColor: Color(
-                                    0xFF1ABC9C,
-                                  ), // Teal for success
+                                  backgroundColor: Color(0xFF1ABC9C),
                                 ),
                               );
                             }
@@ -168,14 +161,12 @@ class _HomePageState extends State<HomePage> {
                               setState(() => _connectingToIndex = null);
                             }
                             if (kDebugMode) print("Connection error: $e");
-                            _currentConnection?.dispose(); // Dispose on error
-                            _currentConnection =
-                                null; // Ensure it's null on failure
+                            _currentConnection?.dispose();
+                            _currentConnection = null;
                             ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                               const SnackBar(
                                 content: Text("Error connecting to device"),
-                                backgroundColor:
-                                    Colors.red, // Standard error color
+                                backgroundColor: Colors.red,
                               ),
                             );
                             if (mounted) setState(() => deviceStatus = false);
@@ -197,10 +188,8 @@ class _HomePageState extends State<HomePage> {
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(
-                      0xFF8C92AC,
-                    ), // Muted Grey/Blue for button
-                    foregroundColor: Color(0xFFECF0F1), // Light Grey text
+                    backgroundColor: Color(0xFF8C92AC),
+                    foregroundColor: Color(0xFFECF0F1),
                   ),
                   child: const Text("Stop Scan"),
                 ),
@@ -215,12 +204,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         if (_currentConnection != null && _currentConnection!.isConnected) {
           if (details.x < 0) {
-            // Moving left
             x_servo = (x_servo - 3).clamp(0, 180);
             _currentConnection!.writeString("S1-${x_servo}\n");
             print("S1${x_servo}");
           } else if (details.x > 0) {
-            // Moving right
             x_servo = (x_servo + 3).clamp(0, 180);
             _currentConnection!.writeString("S1-${x_servo}\n");
             print("S1${x_servo}");
@@ -235,16 +222,6 @@ class _HomePageState extends State<HomePage> {
             _currentConnection!.writeString("S2-${y_servo}\n");
             print("S2${y_servo}");
           }
-        } else {
-          ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-            const SnackBar(
-              content: Text(
-                "No active Bluetooth connection to send joystick data.",
-              ),
-              backgroundColor: Colors.red, // Standard error color
-            ),
-          );
-          print("No active Bluetooth connection to send joystick data.");
         }
       });
     }
@@ -267,37 +244,23 @@ class _HomePageState extends State<HomePage> {
             _currentConnection!.writeString("S3-${clamp_servo}\n");
             print("S3${clamp_servo}");
           } else if (details.x > 0) {
-            // Moving down (typically positive y for down)
             clamp_servo = (clamp_servo + 3).clamp(0, 180);
             _currentConnection!.writeString("S3-${clamp_servo}\n");
             print("S3${clamp_servo}");
           }
-        } else {
-          ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-            const SnackBar(
-              content: Text(
-                "No active Bluetooth connection to send joystick data.",
-              ),
-              backgroundColor: Colors.red, // Standard error color
-            ),
-          );
-          print("No active Bluetooth connection to send joystick data.");
         }
       });
     }
 
     return Scaffold(
-      // Overall background of the app
-      backgroundColor: Color(0xFFECF0F1), // Light Grey
+      backgroundColor: Color(0xFFECF0F1),
       appBar: AppBar(
         title: const Text(
           "RoboArm Controller",
-          style: TextStyle(color: Color(0xFFECF0F1)), // Light Grey text
+          style: TextStyle(color: Color(0xFFECF0F1)),
         ),
-        backgroundColor: Color(0xFF2C3E50), // Dark Grey/Almost Black for AppBar
-        iconTheme: const IconThemeData(
-          color: Color(0xFFECF0F1),
-        ), // Light Grey for icons
+        backgroundColor: Color(0xFF2C3E50),
+        iconTheme: const IconThemeData(color: Color(0xFFECF0F1)),
       ),
       body: Column(
         children: [
@@ -308,9 +271,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   "Adapter State: " + _adapterState.name,
-                  style: TextStyle(
-                    color: Color(0xFF2C3E50),
-                  ), // Dark Grey for text
+                  style: TextStyle(color: Color(0xFF2C3E50)),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
@@ -320,10 +281,8 @@ class _HomePageState extends State<HomePage> {
                     displayDevices();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFFFD700), // Yellow for button
-                    foregroundColor: Color(
-                      0xFF2C3E50,
-                    ), // Dark Grey text on yellow
+                    backgroundColor: Color(0xFFFFD700),
+                    foregroundColor: Color(0xFF2C3E50),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                       vertical: 12,

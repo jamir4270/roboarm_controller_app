@@ -7,6 +7,10 @@ Welcome to the `roboarm_controller_app` repository! This project features a Robo
 
 This repository is publicly available, encouraging collaboration, learning, and further development within the robotics and mobile app community.
 
+## Demo
+* **Note:** The demo only showcases that the app can successfully send data towards a device that supports Bluetooth Classic connection. In the demo, a python script was utilized to make the laptop a receiver of the data from the mobile app.
+* **Link:** [https://drive.google.com/file/d/1vhGL-lnYUiiFAy-qENA_Ge0K_Pp6bKTc/view?usp=sharing](https://drive.google.com/file/d/1vhGL-lnYUiiFAy-qENA_Ge0K_Pp6bKTc/view?usp=sharing)
+
 ## Features
 
 * **Intuitive Joystick Control:** Control the robotic arm's four servo motors using on-screen joysticks for precise movements.

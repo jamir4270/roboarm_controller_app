@@ -307,9 +307,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   const Text(
                     "XY-AXIS",
-                    style: TextStyle(
-                      color: Color(0xFF2C3E50),
-                    ), // Dark Grey for text
+                    style: TextStyle(color: Color(0xFF2C3E50)),
                   ),
                 ],
               ),
@@ -321,9 +319,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   const Text(
                     "Z-AXIS & CLAMP",
-                    style: TextStyle(
-                      color: Color(0xFF2C3E50),
-                    ), // Dark Grey for text
+                    style: TextStyle(color: Color(0xFF2C3E50)),
                   ),
                 ],
               ),
@@ -340,8 +336,8 @@ class _HomePageState extends State<HomePage> {
             },
           );
         },
-        backgroundColor: Color(0xFF1ABC9C), // Teal for FAB
-        foregroundColor: Color(0xFFECF0F1), // Light Grey for icon
+        backgroundColor: Color(0xFF1ABC9C),
+        foregroundColor: Color(0xFFECF0F1),
         child: const Icon(Icons.info_rounded),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
